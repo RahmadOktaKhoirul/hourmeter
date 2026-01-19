@@ -1,8 +1,0 @@
-{
-  "gpio_pin": 27,
-  "save_interval": 10,
-  "data_file": "/home/pi/hour-meter/hm_total.json",
-  "modbus_id": 1,
-  "port_rs485": "/dev/ttyUSB0",
-  "baudrate": 9600
-}
