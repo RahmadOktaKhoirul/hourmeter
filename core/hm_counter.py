@@ -1,19 +1,15 @@
 import time
 
 class HourMeter:
-    def __init__(self, total_seconds=0):
-        self.total_seconds = total_seconds
-        self.run_seconds = 0
+    def __init__(self, total_seconds=0, factor=1.0):
+        self.total_seconds = float(total_seconds)
+        self.factor = factor
+        self._last_time = time.monotonic()
 
-    def tick(self, running):
-        if running:
-            self.total_seconds += 1
-            self.run_seconds += 1
-        else:
-            self.run_seconds = 0
+    def tick(self, hm_on):
+        now = time.monotonic()
+        delta = now - self._last_time
+        self._last_time = now
 
-    def format_hm(self):
-        h = self.total_seconds // 3600
-        m = (self.total_seconds % 3600) // 60
-        s = self.total_seconds % 60
-        return h, m, s
+        if hm_on and delta > 0:
+            self.total_seconds += delta * self.factor
