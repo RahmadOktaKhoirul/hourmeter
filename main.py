@@ -4,10 +4,11 @@ from core.hm_counter import HourMeter
 from core.storage import load_state, save_state
 from core.button_reset import init_button, is_reset_pressed
 
-CAL_FACTOR = 1.019  # hasil kalibrasi lapangan kamu
+CAL_FACTOR = 1.0023  # hasil kalibrasi lapangan kamu
 
 print("=== Hour Meter Service Started ===")
 
+# Load state dari hm_state.json
 state = load_state()
 
 hm = HourMeter(
@@ -50,7 +51,8 @@ while True:
 
         print(
             f"!!! HM RESET at {ts} | "
-            f"BEFORE={bh:02}:{bm:02}:{bs:02} ({bh}.{bm:02})"
+            f"BEFORE={bh:02}:{bm:02}:{bs:02} ({bh}.{bm:02}) "
+            f"TOTAL_SECONDS={0}"
         )
 
     # ===== NORMAL OPERATION =====
@@ -61,20 +63,25 @@ while True:
     m = int((hm.total_seconds % 3600) // 60)
     s = int(hm.total_seconds % 60)
 
+    # Tambahkan total_seconds di log raw
     raw.append({
         "ts": time.strftime("%Y-%m-%d %H:%M:%S"),
         "state": "ON" if hm_on else "OFF",
         "hms": f"{h:02}:{m:02}:{s:02}",
-        "hm": f"{h}.{m:02}"
+        "hm": f"{h}.{m:02}",
+        "total_seconds": round(hm.total_seconds, 2)
     })
 
+    # Simpan state termasuk total_seconds
     save_state(hm.total_seconds, raw, events)
 
+    # Print log realtime
     print(
         f"[{time.strftime('%F %T')}] "
         f"HM={'ON' if hm_on else 'OFF'} "
         f"TOTAL={h:02}:{m:02}:{s:02} "
-        f"HM_DISPLAY={h}.{m:02}"
+        f"HM_DISPLAY={h}.{m:02} "
+        f"TOTAL_SECONDS={round(hm.total_seconds,2)}"
     )
 
     time.sleep(0.2)  # loop cepat, waktu tidak tergantung ini
