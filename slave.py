@@ -7,7 +7,7 @@ DATA_FILE = "/home/pi/hourmeter/data/hm_state.json"
 
 BROKER = "192.168.100.107"
 TOPIC = "sensor/hm/slave01"
-CLIENT_ID = "hm_slave01"
+CLIENT_ID = "hm_master_monitor01"
 
 client = mqtt.Client(client_id=CLIENT_ID)
 client.connect(BROKER, 1883, 60)
